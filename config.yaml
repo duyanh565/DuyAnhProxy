@@ -1,0 +1,45 @@
+# ============================================================
+# Cấu hình mitmproxy File Replacer
+# ============================================================
+
+# ── Cổng proxy ──────────────────────────────────────────────
+# Đây là cổng bạn nhập vào iOS: Cài đặt → WiFi → Cấu hình Proxy → Cổng
+port: 8080
+
+# ── Host Railway (để phục vụ trang tải cert) ─────────────────
+# Truy cập thẳng http://<cert_host>:<port>/ để tải cert (không cần cài proxy trước)
+cert_host: "hayabusa.proxy.rlwy.net"
+
+# ── Lọc domain (tuỳ chọn) ────────────────────────────────────
+# Chỉ áp dụng rule khi request đến các domain này.
+# Để trống [] nếu muốn áp dụng cho TẤT CẢ domain.
+allowed_domains:
+  - "garena.com"
+  - "garena.more"
+  - "ff.garena.com"
+  - "freefiremobile.com"
+  - "cdn.freefiremobile.com"
+  - "res.cdn.garena.com"
+  - "static.cdn.garena.com"
+
+# ── Danh sách rule thay file ─────────────────────────────────
+# match:        Tên file (hoặc một phần) cần khớp trong URL
+# replace_with: Tên file trong thư mục replacements/ để thay vào
+# app:          Ghi chú app (không ảnh hưởng logic)
+#
+# ============================================================
+
+rules:
+  # Free Fire & Free Fire Max
+  - match: "cache_res.CfnFf59sr1SbsqQ6JqTKsEusjKs~3D"
+    replace_with: "cache_res.CfnFf59sr1SbsqQ6JqTKsEusjKs~3D"
+    app: "Free Fire / Free Fire Max"
+
+  - match: "assetindexer.H5ak1JM1Eck~2FxRcJrEp~2FMzeuqmY~3D"
+    replace_with: "assetindexer.H5ak1JM1Eck~2FxRcJrEp~2FMzeuqmY~3D"
+    app: "Free Fire / Free Fire Max"
+
+  # Thêm rule khác tại đây:
+  # - match: "tên_file_cần_thay"
+  #   replace_with: "tên_file_local_trong_replacements"
+  #   app: "Tên app"

@@ -1,0 +1,2 @@
+mitmproxy==10.3.1
+pyyaml==6.0.2
