@@ -1,0 +1,39 @@
+# ============================================================
+# Cấu hình mitmproxy File Replacer
+# Mode duy nhất: HTTP Proxy thường (user nhập IP + port vào WiFi)
+# ============================================================
+
+# ── Cổng mitmproxy nội bộ (Railway forward vào đây) ──────────
+port: 9090
+
+# ── HTTP domain Railway (trang tải cert) ─────────────────────
+cert_host: "duyanhproxy-production.up.railway.app"
+
+# ── Địa chỉ iPhone thực sự kết nối tới (Railway TCP Proxy) ───
+proxy_host: "hayabusa.proxy.rlwy.net"
+external_port: 56020
+
+# ── Lọc domain ───────────────────────────────────────────────
+allowed_domains:
+  - "garena.com"
+  - "garena.mobi"
+  - "ff.garena.com"
+  - "freefiremobile.com"
+  - "cdn.freefiremobile.com"
+  - "res.cdn.garena.com"
+  - "static.cdn.garena.com"
+
+# ── Rules thay file ───────────────────────────────────────────
+rules:
+  - match: "cache_res.CfnFf59sr1SbsqQ6JqTKsEusjKs~3D"
+    replace_with: "cache_res.CfnFf59sr1SbsqQ6JqTKsEusjKs~3D"
+    app: "Free Fire / Free Fire Max"
+
+  - match: "assetindexer.H5ak1JM1Eck~2FxRcJrEp~2FMzeuqmY~3D"
+    replace_with: "assetindexer.H5ak1JM1Eck~2FxRcJrEp~2FMzeuqmY~3D"
+    app: "Free Fire / Free Fire Max"
+
+  # Thêm rule mới:
+  # - match: "tên_file_cần_bắt"
+  #   replace_with: "tên_file_trong_replacements/"
+  #   app: "Tên app"
