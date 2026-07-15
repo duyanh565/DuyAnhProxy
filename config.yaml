@@ -10,8 +10,8 @@ port: 8889
 cert_host: "duyanhproxy-production.up.railway.app"
 
 # ── Địa chỉ iPhone thực sự kết nối tới (Railway TCP Proxy) ───
-proxy_host: "tokaido.proxy.rlwy.net"
-external_port: 52617
+proxy_host: "shortline.proxy.rlwy.net"
+external_port: 40893
 
 # ── Lọc domain ───────────────────────────────────────────────
 allowed_domains:
