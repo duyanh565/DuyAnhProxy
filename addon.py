@@ -7,7 +7,7 @@ import yaml
 from mitmproxy import http
 
 CONFIG_PATH      = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.yaml")
-REPLACEMENTS_DIR = os.path.dirname(os.path.abspath(__file__))
+REPLACEMENTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "replacements")
 
 
 class FileReplacer:
@@ -69,9 +69,12 @@ class FileReplacer:
                             content = f.read()
                         flow.response.content = content
                         flow.response.status_code = 200
-                        for h in ["Content-Encoding", "Transfer-Encoding"]:
+                        for h in ["Content-Encoding", "Transfer-Encoding",
+                                  "Cache-Control", "ETag", "Last-Modified",
+                                  "Expires", "Age"]:
                             flow.response.headers.pop(h, None)
                         flow.response.headers["Content-Length"] = str(len(content))
+                        flow.response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
                         flow.response.headers.setdefault(
                             "Content-Type", "application/octet-stream")
                         print(f"[✓] Đã thay: {filename} → {replace_with} ({len(content)} bytes)")

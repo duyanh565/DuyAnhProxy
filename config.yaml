@@ -15,7 +15,6 @@ external_port: 40893
 
 # ── Lọc domain ───────────────────────────────────────────────
 allowed_domains:
-  - "com.dts.freefireth"
   - "ff.garena.vn"
   - "garena.com"
   - "garena.mobi"
