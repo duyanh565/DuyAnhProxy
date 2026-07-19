@@ -7,7 +7,7 @@ import yaml
 from mitmproxy import http
 
 CONFIG_PATH      = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.yaml")
-REPLACEMENTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "replacements")
+REPLACEMENTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class FileReplacer:
