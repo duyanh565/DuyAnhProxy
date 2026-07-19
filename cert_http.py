@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Optional
 
 BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
-CERTS_DIR = BASE_DIR
+CERTS_DIR = os.path.join(BASE_DIR, "certs")
 CERT_PEM  = os.path.join(CERTS_DIR, "mitmproxy-ca-cert.pem")
 CERT_CER  = os.path.join(CERTS_DIR, "mitmproxy-ca-cert.cer")
 

@@ -29,7 +29,7 @@ print(f"[debug] PROXY_PORT (mitmproxy) = {PROXY_PORT}")
 print(f"[debug] HTTP_PORT  (cert web)  = {HTTP_PORT}")
 
 ADDON_PATH = os.path.join(BASE_DIR, "addon.py")
-CERTS_DIR  = BASE_DIR
+CERTS_DIR  = os.path.join(BASE_DIR, "certs")
 MITM_DIR   = os.path.expanduser("~/.mitmproxy")
 
 # ── Copy cert cố định vào ~/.mitmproxy/ ─────────────────────────────────────
@@ -137,6 +137,7 @@ def run_mitmproxy():
                     # Chỉ MITM CDN asset — login/game server đi thẳng không bị chặn
                                     "--allow-hosts",
                     r"(cdn\.freefiremobile\.com|dl\.gmc\.freefiremobile\.com|res\.cdn\.garena\.com|static\.cdn\.garena\.com|ff\.garena\.vn|garena\.com|garena\.mobi|ff\.garena\.com|freefiremobile\.com)",
+                ],
                 preexec_fn=os.setsid,  # tạo process group riêng
             )
             returncode = proc.wait()
