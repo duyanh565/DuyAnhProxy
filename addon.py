@@ -16,22 +16,40 @@ class FileReplacer:
             config = yaml.safe_load(f)
         self.rules   = config.get("rules", [])
         self.allowed = config.get("allowed_domains", [])
+        print(f"[addon] REPLACEMENTS_DIR = {REPLACEMENTS_DIR}")
         print(f"[addon] Đã tải {len(self.rules)} rule(s).")
         for r in self.rules:
-            print(f"  [{r.get('app', '')}] '{r.get('match', '?')}' → '{r.get('replace_with', '?')}'")
+            rpath = os.path.join(REPLACEMENTS_DIR, r.get("replace_with", ""))
+            exists = os.path.exists(rpath)
+            print(f"  [{r.get('app','')}] match='{r.get('match','?')}' "
+                  f"→ file='{rpath}' exists={exists}")
 
     def _allowed_domain(self, host: str) -> bool:
         if not self.allowed:
             return True
         return any(host == d or host.endswith("." + d) for d in self.allowed)
 
+    def request(self, flow: http.HTTPFlow) -> None:
+        """Log mọi request để thấy proxy có bắt được traffic không."""
+        host = flow.request.host
+        url  = flow.request.pretty_url
+        if any(kw in host for kw in ["garena", "freefire", "gmc"]):
+            print(f"[req] {flow.request.method} {url[:120]}")
+
     def response(self, flow: http.HTTPFlow) -> None:
         if flow.response is None:
             return
         host     = flow.request.host
-        filename = flow.request.pretty_url.split("?")[0].split("/")[-1]
+        full_url = flow.request.pretty_url.split("?")[0]
+        filename = full_url.split("/")[-1]
+
+        # Log mọi response từ domain game
+        if any(kw in host for kw in ["garena", "freefire", "gmc"]):
+            print(f"[res] {host} | file='{filename}' | status={flow.response.status_code}")
 
         if not self._allowed_domain(host):
+            if any(kw in host for kw in ["garena", "freefire", "gmc"]):
+                print(f"[skip] domain không trong allowed_domains: {host}")
             return
 
         for rule in self.rules:
@@ -44,6 +62,7 @@ class FileReplacer:
                     print(f"[!] Rule thiếu 'replace_with': {rule}")
                     continue
                 path = os.path.join(REPLACEMENTS_DIR, replace_with)
+                print(f"[match] Khớp rule '{match}' | tìm file: {path}")
                 if os.path.exists(path):
                     try:
                         with open(path, "rb") as f:
@@ -55,12 +74,23 @@ class FileReplacer:
                         flow.response.headers["Content-Length"] = str(len(content))
                         flow.response.headers.setdefault(
                             "Content-Type", "application/octet-stream")
-                        print(f"[✓] Thay: {filename} → {replace_with}")
+                        print(f"[✓] Đã thay: {filename} → {replace_with} ({len(content)} bytes)")
                     except OSError as e:
                         print(f"[!] Lỗi đọc file thay: {path} — {e}")
                 else:
-                    print(f"[!] File thay không tồn tại: {path}")
+                    print(f"[!] File thay KHÔNG TỒN TẠI: {path}")
+                    print(f"[!] Các file hiện có trong {REPLACEMENTS_DIR}:")
+                    try:
+                        files = os.listdir(REPLACEMENTS_DIR)
+                        for fn in files:
+                            print(f"    - {fn}")
+                    except Exception as e:
+                        print(f"    (lỗi listdir: {e})")
                 break
+        else:
+            # Không khớp rule nào — log nếu là domain game
+            if self._allowed_domain(host) and filename:
+                print(f"[no-match] {host} | '{filename}' không khớp rule nào")
 
 
 addons = [FileReplacer()]
