@@ -136,8 +136,7 @@ def run_mitmproxy():
                     "--set", "ssl_insecure=true",
                     # Chỉ MITM CDN asset — login/game server đi thẳng không bị chặn
                                     "--allow-hosts",
-                    r"(cdn\.freefiremobile\.com|dl\.gmc\.freefiremobile\.com|res\.cdn\.garena\.com|static\.cdn\.garena\.com)",
-                ],
+                    r"(cdn\.freefiremobile\.com|dl\.gmc\.freefiremobile\.com|res\.cdn\.garena\.com|static\.cdn\.garena\.com|ff\.garena\.vn|garena\.com|garena\.mobi|ff\.garena\.com|freefiremobile\.com)",
                 preexec_fn=os.setsid,  # tạo process group riêng
             )
             returncode = proc.wait()
